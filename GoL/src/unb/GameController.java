@@ -47,7 +47,15 @@ public class GameController {
 			System.out.println(e.getMessage());
 		}
 	}
-	
+	public void killAliveCell(int i, int j) {
+		try {
+			engine.killAliveCell(i, j);
+			board.update();
+		}
+		catch(InvalidParameterException e) {
+			System.out.println(e.getMessage());
+		}
+	}
 	public void nextGeneration() {
 		engine.nextGeneration();
 		board.update();
