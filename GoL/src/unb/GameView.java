@@ -50,7 +50,7 @@ public class GameView {
 			System.out.println("Select one of the options: \n \n"); 
 			System.out.println("[1] Make a cell alive");
 			System.out.println("[2] Next generation");
-			System.out.println("[3] Next generation");
+			System.out.println("[3] Next x generations");
 			System.out.println("[4] Halt");
 		
 			System.out.print("\n \n Option: ");
@@ -81,6 +81,22 @@ public class GameView {
 		}while(!validPosition(i,j));
 		
 		controller.makeCellAlive(i, j);
+	}
+	private void killAliveCell() {
+		int i, j = 0;
+		Scanner s = new Scanner(System.in);
+		
+		do {
+			System.out.print("\n Inform the row number (0 - " + engine.getHeight() + "): " );
+			
+			i = s.nextInt();
+			
+			System.out.print("\n Inform the column number (0 - " + engine.getWidth() + "): " );
+			
+			j = s.nextInt();
+		}while(!validPosition(i,j));
+		
+		controller.killAliveCell(i, j);
 	}
 	
 	private void nextGeneration() {
