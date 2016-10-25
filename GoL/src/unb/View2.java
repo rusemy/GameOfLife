@@ -10,8 +10,14 @@ import javax.swing.JTextField;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
+import javax.swing.JEditorPane;
+import java.awt.Panel;
+import java.awt.Color;
+import java.awt.FlowLayout;
+import javax.swing.JPanel;
+import java.awt.GridLayout;
 
-public class View {
+public class View2 {
 
 	Statistics statistics = new Statistics();
 	private GameEngine engine = new Conway(10, 10, statistics);
@@ -29,7 +35,8 @@ public class View {
 	private JTextField textFieldxnext;
 	private JTextField textFieldxundo;
 	private JTable table;
-
+	private JButton[][] buttons;
+	private JPanel grid;
 	/**
 	 * Launch the application.
 	 */
@@ -37,7 +44,7 @@ public class View {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					View window = new View();
+					View2 window = new View2();
 					window.frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -49,7 +56,7 @@ public class View {
 	/**
 	 * Create the application.
 	 */
-	public View() {
+	public View2() {
 		initialize();
 	}
 
@@ -70,6 +77,8 @@ public class View {
 					x = Integer.parseInt(textFieldxalive.getText());
 					y = Integer.parseInt(textFieldyalive.getText());
 					//controller.makeCellAlive(y, x);
+					engine.makeCellAlive(y, x);
+					update(grid);
 				}catch(Exception e){
 					JOptionPane.showMessageDialog(null, ERRO_INVARG);
 				}
@@ -197,7 +206,33 @@ public class View {
 		textFieldxundo.setColumns(10);
 		
 		table = new JTable();
+		table.setForeground(Color.GREEN);
+		table.setBackground(Color.BLACK);
 		table.setBounds(10, 305, 674, -291);
 		frame.getContentPane().add(table);
+		
+		grid = new JPanel();
+		grid.setBounds(10, 11, 674, 292);
+		frame.getContentPane().add(grid);
+		grid.setLayout(new GridLayout(engine.getHeight(), engine.getWidth(), 0, 0));
+		
+		buttons = new JButton[engine.getHeight()][engine.getWidth()];
+		//public void update(){
+			for(int k=0;k < engine.getHeight();k++){
+				for(int j=0;j < engine.getWidth();j++){
+					buttons[k][j] = new JButton(engine.isCellAlive(k, j) ? "#" : " ");
+					grid.add(buttons[k][j]);
+				}
+				
+			}
+	}
+	private void update(JPanel grid) {
+		for(int k=0;k < engine.getHeight();k++){
+			for(int j=0;j < engine.getWidth();j++){
+				buttons[k][j] = new JButton(engine.isCellAlive(k, j) ? "#" : " ");
+				grid.add(buttons[k][j]);
+			}
+			
+		}
 	}
 }
