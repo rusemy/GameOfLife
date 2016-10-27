@@ -9,6 +9,8 @@ abstract class GameEngine {
 	/*private*/protected int width;
 	/*private*/protected Cell[][] cells;
 	/*private*/protected Statistics statistics;
+	/*private*/protected int maxStates = 10;
+	pastStates undoStates = new pastStates();
 
 	/**
 	 * Construtor da classe Environment.
@@ -21,7 +23,7 @@ abstract class GameEngine {
 	 GameEngine(int height, int width, Statistics statistics) {
 		this.height = height;
 		this.width = width;
-
+		undoStates.baseParameters(height, width, maxStates);
 		cells = new Cell[height][width];
 
 		for (int i = 0; i < height; i++) {
@@ -58,7 +60,7 @@ abstract class GameEngine {
 				}
 			}
 		}
-		
+		undoStates.add(cells);
 		for (Cell cell : mustRevive) {
 			cell.revive();
 			statistics.recordRevive();
@@ -69,7 +71,11 @@ abstract class GameEngine {
 			statistics.recordKill();
 		}
 	}
-	
+	public void nextGenerations(int x) {
+		for(int i = 0; i < x;i++){
+			nextGeneration();
+		}
+	}
 	/**
 	 * Torna a celula de posicao (i, j) viva
 	 * 
@@ -86,7 +92,9 @@ abstract class GameEngine {
 		else {
 			new InvalidParameterException("Invalid position (" + i + ", " + j + ")" );
 		}
+		undoStates.add(cells);
 	}
+
 	public void killAliveCell(int i, int j) throws InvalidParameterException {
 		if(validPosition(i, j)) {
 			cells[i][j].kill();
@@ -94,6 +102,17 @@ abstract class GameEngine {
 		}
 		else {
 			new InvalidParameterException("Invalid position (" + i + ", " + j + ")" );
+		}
+		undoStates.add(cells);
+	}
+	public void undo(){
+		if(undoStates.getPast() != null){
+			cells = undoStates.getPast();
+		}
+	}
+	public void undos(int x){
+		for(int i = 0;i < x;i++){
+			undo();
 		}
 	}
 	/**

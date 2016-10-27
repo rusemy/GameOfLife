@@ -26,6 +26,7 @@ public class View2 {
 	//controller.setStatistics(statistics);
 	private static final String ERRO_INVARG = "Invalid arguments!";
 	private static final String ERRO_NIMPL = "Not implemented yet.";
+	private static final String ERRO = "ERRO!";
 	
 	private JFrame frame;
 	private JTextField textFieldxalive;
@@ -94,7 +95,8 @@ public class View2 {
 				try{
 					x = Integer.parseInt(textFieldxkill.getText());
 					y = Integer.parseInt(textFieldykill.getText());
-					//controller.killAliveCell(y, x);
+					engine.killAliveCell(y, x);
+					update(grid);
 				}catch(Exception e){
 					JOptionPane.showMessageDialog(null, ERRO_INVARG);
 				}
@@ -107,9 +109,10 @@ public class View2 {
 		btnNextGeneration.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg) {
 				try{
-					controller.nextGeneration();
+					engine.nextGeneration();
+					update(grid);
 				}catch(Exception e){
-					JOptionPane.showMessageDialog(null, ERRO_NIMPL);
+					JOptionPane.showMessageDialog(null, ERRO);
 				}
 			}
 		});
@@ -122,7 +125,8 @@ public class View2 {
 				int x;
 				try{
 					x = Integer.parseInt(textFieldxnext.getText());
-					//controller.nextGenerations(x);
+					engine.nextGenerations(x);
+					update(grid);
 				}catch(Exception e){
 					JOptionPane.showMessageDialog(null, ERRO_INVARG);
 				}
@@ -135,8 +139,10 @@ public class View2 {
 		btnUndo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg) {
 				try{
+					engine.undo();
+					update(grid);
 				}catch(Exception e){
-					JOptionPane.showMessageDialog(null, ERRO_NIMPL);
+					JOptionPane.showMessageDialog(null, ERRO);
 				}
 			}
 		});
@@ -149,6 +155,10 @@ public class View2 {
 				int x;
 				try{
 					x = Integer.parseInt(textFieldxundo.getText());
+					if(x < 10 && x > 0){
+						engine.undos(x);
+						update(grid);
+					}
 				}catch(Exception e){
 					JOptionPane.showMessageDialog(null, ERRO_INVARG);
 				}
@@ -229,8 +239,9 @@ public class View2 {
 	private void update(JPanel grid) {
 		for(int k=0;k < engine.getHeight();k++){
 			for(int j=0;j < engine.getWidth();j++){
-				buttons[k][j] = new JButton(engine.isCellAlive(k, j) ? "#" : " ");
-				grid.add(buttons[k][j]);
+				//buttons[k][j] = new JButton(engine.isCellAlive(k, j) ? "#" : " ");
+				//grid.add(buttons[k][j]);
+				buttons[k][j].setText(engine.isCellAlive(k, j) ? "#" : " ");
 			}
 			
 		}
